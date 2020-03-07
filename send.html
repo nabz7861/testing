@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+       <link rel="stylesheet" type="text/css" href="en.css">
+    <script src="https://unpkg.com/vue"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+<!--
+  <link rel="stylesheet" type="text/css" href="cc1css.css">
+      <link rel="stylesheet" type="text/css" href="cc1css.css">
+-->
+
+</head>
+
+<body>
+    
+	<div class="nav">
+  <input type="checkbox" id="nav-check">
+  <div class="nav-header">
+    <div class="nav-title">
+  <a href="https://imgbb.com/"><img src="https://i.ibb.co/ZHBpwxL/medicine-clipart-general-medicine-2-transparent.png" style="width:40px;height:39px;" ></a><br />
+    </div>
+  </div>
+  <div class="nav-btn">
+    <label for="nav-check">
+      <span></span>
+      <span></span>
+      <span></span>
+    </label>
+  </div>
+  
+  <div class="nav-links">
+    <a href="//github.io/jo_geek" target="_blank">Book Appointment</a>
+    <a href="http://stackoverflow.com/users/4084003/" target="_blank">Login</a>
+       <a href="https://codepen.io/jo_Geek/" target="_blank">My Appointment</a>
+      <a href="https://in.linkedin.com/in/jonesvinothjoseph" target="_blank">Settings</a>
+
+  
+  </div>
+</div>
+    <br>
+
+<div id="app">
+    
+    
+<div class="container"></div>
+    <v-app>
+        <v-content>
+            <v-container>
+                <div class="text-center title">Select a Date & Time</div>
+                <v-row justify="center">
+                    <v-date-picker
+                            v-model="date"
+                            :allowed-dates="allowedDates"
+                            class="mt-4"
+                            min="2019-10-10"
+                            max="2022-03-20"
+                    ></v-date-picker>
+                  
+                    
+                        <v-col cols=2 v-show="date !== null">
+                            <template v-for="allowedTime in allowedTimes">
+                                <v-btn
+                                        @click="setTime(allowedTime)"
+                                        class="my-2"
+                                        :outlined="allowedTime !== time"
+                                        block
+                                        x-large
+                                        color="primary"
+                                >{{ allowedTime }}
+                                </v-btn>
+                            </template>
+                        </v-col>
+                   
+                </v-row>
+            </v-container>
+        </v-content>
+    </v-app>
+    <br>
+    
+
+      <div class="form__group field">
+    <input type="input" id="myInput1" placeholder="Name" v-model='name' disabled>
+       
+    <br>
+    <br>
+    <input type="email" id="myInput2" placeholder="Email" v-model='email' disabled>
+    <br>    <br>
+    
+
+    <input type="input" id="myInput2" placeholder="Reason for Appointment" v-model='reason'>
+<br><br>
+    <button v-on:click='addCourse()' class="button1">Book</button>
+</div>
+</div>
+    <p id="demo">
+        
+        
+           <p id="err">
+<script>
+
+    const API = "http://localhost:3000";
+
+    new Vue({
+        el: '#app',
+        vuetify: new Vuetify(),
+        data: () => ({
+            date: null,
+            reason: '',
+            name: '',
+            email: '',
+            time: null,
+            allowedTimes: ['8:30 am', '9:00am', '10:30am', '1:30pm', '3:30 pm']
+        }),
+
+        methods: {
+            allowedDates: val => parseInt, setTime(time) {
+                this.time = time
+
+                console.log(time)
+                console.log(this.date)
+            },
+
+            addCourse: function () {
+
+                fetch(API + '/booked/' + 'datetime', {
+                    headers: {"Content-Type": "application/json; charset=utf-8"},
+                    method: 'post',
+                    body: JSON.stringify({
+                        date: this.time,
+                        time: this.date,
+
+                    })
+                }).then((res) => {
+                    if(res.status===400){
+              document.getElementById("demo").innerHTML = "This slot is booked, Pick another one!";
+                            
+
+                        
+                    }else{
+                        window.location.reload()
+                        
+                    }
+
+                }).catch((err) => {
+                    console.log(err)
+                })
+            },
+
+
+        },
+        
+        
+    })
+        var myInput = document.getElementById('myInput2');
+myInput.value = 'Username 1';
+       var myInput = document.getElementById('myInput1');
+myInput.value = 'Useremail@d.com';
+
+
+</script>
+</body>
+
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>cw1 - search</title>
+    <script src="https://unpkg.com/vue"></script>
+    <script src="courses.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="search">
+        Search <input v-model='term'><br>
+        <div v-for='course in results' class='course'>
+            <ul>
+                <li v-for='(value, key) in course'>
+                    {{key}}: {{value}}
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+         var searchApp = new Vue({
+            el: '#search',
+            data: {
+                term: '',                
+            },
+            computed: {
+                results: function () {
+                    return courses.filter(course => 
+                        course.topic.includes(this.term)
+                    )
+                },
+            },
+        });
+    </script>
+</body>
+
+</html>
