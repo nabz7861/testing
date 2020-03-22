@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    <script type="text/javascript"></script>
+    <script src="https://unpkg.com/vue"></script>
+    <link rel="stylesheet" type="text/css" href="cc1css.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="manifest" href="website.webmanifest">
+
+
+    <div id="searchFilter">
+        <h1>Registration </h1>
+        Name: <input type="text" id="myText" value="">
+
+
+        <link href="https://fonts.googleapis.com/css?family=Sacramento&display=swap" rel="stylesheet">
+
+
+
+
+
+        <center>
+            <div id="navigation">
+                <toplinks v-bind:page=page></toplinks>
+            </div>
+        </center>
+        <br> <br> <br>
+
+
+        <center>
+            <input type="email" id="myInput" placeholder="Email" v-model='topic'>
+
+            <br> <br>
+            <input type="password" id="myInput" placeholder="Password" v-model='location'>
+            <br><br>
+            <section>
+                <h3>Who are you?</h3>
+
+                <br>
+
+                <select v-model="selectOne">
+                    <option>student</option>
+                    <option selected>provider</option>
+
+                </select>
+
+                <span>you are a {{ selectOne }}</span>
+                <br> <br>
+            </section>
+
+
+
+
+            <br>
+            <button v-on:click='addCourse' class=" button button1">login</button>
+            <br>
+            <br>
+            <h2>
+                <p id="demo">
+            </h2>
+            <h2>
+                <p id="err">
+            </h2>
+   </center>
+
+        <br> <br>
+        <br><br><br><br><br><br>
+        <br><br><br><br><br><br>
+
+        <h3>Lastest logged user</h3>
+        <table id="myTable">
+            <tr class="header">
+
+
+            </tr>
+            <tr v-for='course in dbTable' class='course'>
+                <td>{{course.topic}}</td>
+
+            </tr>
+        </table>
+
+    </div>
+
+
+
+    <script>
+        const API = "http://localhost:3000";
+
+        Vue.component('toplinks', {
+            props: ['page'],
+            template: `<div>
+<a href='registerlastest.html' v-bind:class="{active: page==='home'}">Register</a>
+
+<a href='courses23JAN.html' v-bind:class="{active: page==='userpage'}">Courses</a>
+
+<a href='review.html' v-bind:class="{active: page==='userpage'}">Review</a>
+<a href='r1egtest.html' v-bind:class="{active: page==='userpage'}">user-login</a>
+
+
+
+<a href='login.html' v-bind:class="{active: page==='course'}">site</a>
+</div>`
+        })
+
+
+
+        var searchApp = new Vue({
+            el: '#searchFilter',
+
+            data: {
+                dbTable: [],
+                selectOne: '',
+                page: '',
+                selectOne: '',
+
+                topic: '',
+                location: '',
+
+            },
+
+            methods: {
+                reset: function() {
+                    this.userLocations = [];
+
+                },
+
+                createCollection: function() {
+
+                    fetch(API + '/createCollection', {
+                        headers: {
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        method: 'post',
+                        body: JSON.stringify({
+                            collection: this.newdbcollection
+                        })
+                    }).then((res) => {
+                        console.log(res)
+                    }).catch((err) => {
+                        console.log(err)
+                    })
+                },
+
+
+                addCourse: function() {
+
+                    if (!this.topic) {
+
+                        document.getElementById("demo").innerHTML = "Missing information";
+                        return;
+                    }
+
+                    var string = this.topic
+                    var exp = /(\w(=?@)\w+\.{1}[a-zA-Z]{2,})/i
+                    var test = exp.test(string);
+                    if (test === false) {
+                        document.getElementById("demo").innerHTML = "Re-enter email";
+                        return;
+                    }
+
+
+
+                    users = JSON.parse(localStorage.getItem('users'));
+
+
+
+                    fetch(API + '/users/' + 'register', {
+                        headers: {
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        method: 'post',
+                        body: JSON.stringify({
+                            topic: this.topic,
+                            location: this.location,
+                            type: this.selectOne,
+
+
+
+                        })
+
+
+                    }).then((res) => {
+                        if (res.status === 400) {
+                            document.getElementById("err").innerHTML = "This Username is taken";
+                        } else {
+                            window.location.reload()
+                        }
+
+                    }).catch((err) => {
+                        console.log(err)
+                    })
+                },
+
+
+
+
+                catch (err) {
+                    document.getElementById("err").innerHTML = err.message;
+                }
+            },
+
+
+            created() {
+                //fetching all courses from database on page load
+
+
+
+                fetch(API + '/users/' + 'register', {
+                        method: 'GET',
+
+                        headers: {
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                    }).then(res => res.json())
+                    .then(jsonData => {
+                        jsonData.forEach(element => {
+                            let newItem = {
+                                id: element._id,
+                                topic: element.topic,
+                                location: element.location
+
+
+
+                            };
+
+                            this.dbTable.push(newItem);
+                            
+console.log(newItem);
+var myJSON = JSON.stringify(newItem);           
+//        var txt = newItem;
+//var obj = JSON.stringify(txt);
+                            
+document.getElementById("myText").value = newItem.topic;
+
+                            
+document.getElementById("demo").innerHTML = newItem.topic + ", " + newItem.location;
+
+                        });
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    })
+            },
+
+
+        });
+
+    </script>
+
+
+</body>
+
+</html>

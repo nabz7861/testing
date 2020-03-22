@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+	<meta charset="utf-8">
+	<title>Example Title</title>
+     <script src="https://unpkg.com/vue"></script>
+       <script src="https://xkeshi.github.io/vue-qrcode/js/vue-qrcode.js"></script>  
+	<meta name="author" content="Your Name">
+	<meta name="description" content="Example description">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="">
+	<link rel="icon" type="image/x-icon" href=""/>
+</head>
+
+<body>
+	
+    <div id="searchFilter">
+<label>Unique Patient Reference</label>
+<input type="text" v-model="valueQr" maxlength="20">
+
+<hr>
+  <qrcode :value='valueQr' :options="{ size: sizeQr }" ></qrcode>
+  
+  <button @click="myFunction()">Click Me</button>
+        
+        
+   <h1>Registration </h1>
+        Name: <input type="text" id="myText" value="">
+
+
+        <link href="https://fonts.googleapis.com/css?family=Sacramento&display=swap" rel="stylesheet">
+
+
+
+
+
+<br>
+<br>
+
+        <center>
+            <input type="email" id="myInput" placeholder="Email" v-model='topic'>
+
+            <br> <br>
+            <input type="password" id="myInput" placeholder="Password" v-model='location'>
+            <br><br>
+            <section>
+                <h3>Who are you?</h3>
+
+                <br>
+
+                <select v-model="selectOne">
+                    <option>student</option>
+                    <option selected>provider</option>
+
+                </select>
+
+                <span>you are a {{ selectOne }}</span>
+                <br> <br>
+            </section>
+
+
+
+
+            <br>
+            <button v-on:click='addCourse' class=" button button1">login</button>
+            <br>
+            <br>
+            <h2>
+                <p id="demo">
+            </h2>
+            <h2>
+                <p id="err">
+            </h2>
+   </center>
+
+        <br> <br>
+        <br><br><br><br><br><br>
+        <br><br><br><br><br><br>
+
+        <h3>Lastest logged user</h3>
+        <table id="myTable">
+            <tr class="header">
+
+
+            </tr>
+            <tr v-for='course in dbTable' class='course'>
+                <td>{{course.topic}}</td>
+
+            </tr>
+        </table>      
+        
+        
+        
+        
+        
+</div>
+    
+    
+    
+    
+    
+    
+    
+    <script>
+        const API = "http://localhost:3000";
+    var Vue = window.Vue;
+  var VueQrcode = window.VueQrcode;
+
+  Vue.component('qrcode', VueQrcode);
+
+  new Vue({
+    el: '#searchFilter',
+    data:{
+    valueQr:'',
+ dbTable: [],
+selectOne: '',
+    page: '',
+    selectOne: '',
+
+     topic: '',
+    location: '',
+    sizeQr:200
+    },
+      
+     mounted() {
+      this.myFunction()
+      console.log(this.valueQr);
+    },
+    
+     methods:{
+    myFunction: function () {		
+//     this.valueQr = Math.random()*100;
+        
+        //multiply to generate random number between 0, 100
+    },
+         
+                   reset: function() {
+                    this.userLocations = [];
+
+                },
+
+                createCollection: function() {
+
+                    fetch(API + '/createCollection', {
+                        headers: {
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        method: 'post',
+                        body: JSON.stringify({
+                            collection: this.newdbcollection
+                        })
+                    }).then((res) => {
+                        console.log(res)
+                    }).catch((err) => {
+                        console.log(err)
+                    })
+                },
+
+
+                addCourse: function() {
+
+                    if (!this.topic) {
+
+                        document.getElementById("demo").innerHTML = "Missing information";
+                        return;
+                    }
+
+                    var string = this.topic
+                    var exp = /(\w(=?@)\w+\.{1}[a-zA-Z]{2,})/i
+                    var test = exp.test(string);
+                    if (test === false) {
+                        document.getElementById("demo").innerHTML = "Re-enter email";
+                        return;
+                    }
+
+
+
+                    users = JSON.parse(localStorage.getItem('users'));
+
+
+
+                    fetch(API + '/users/' + 'register', {
+                        headers: {
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        method: 'post',
+                        body: JSON.stringify({
+                            topic: this.topic,
+                            location: this.location,
+                            type: this.valueQr,
+
+
+
+                        })
+
+
+                    }).then((res) => {
+                        if (res.status === 400) {
+                            document.getElementById("err").innerHTML = "This Username is taken";
+                        } else {
+                            window.location.reload()
+                        }
+
+                    }).catch((err) => {
+                        console.log(err)
+                    })
+                },
+
+
+
+
+                catch (err) {
+                    document.getElementById("err").innerHTML = err.message;
+                }
+            },
+                  created() {
+                //fetching all courses from database on page load
+
+
+
+                fetch(API + '/users/' + 'register', {
+                        method: 'GET',
+
+                        headers: {
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                    }).then(res => res.json())
+                    .then(jsonData => {
+                        jsonData.forEach(element => {
+                            let newItem = {
+                                id: element._id,
+                                topic: element.topic,
+                                location: element.location,
+                                type: element.type
+
+
+
+                            };
+
+                            this.dbTable.push(newItem);
+                            
+console.log(newItem);
+var myJSON = JSON.stringify(newItem);           
+//        var txt = newItem;
+//var obj = JSON.stringify(txt);
+                            
+                        this.valueQr = newItem.type;
+                            
+document.getElementById("myText").value = newItem.topic;
+
+                            
+document.getElementById("demo").innerHTML = newItem.topic + ", " + newItem.location;
+
+                        });
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    })
+            },
+      
+         
+         
+   
+  });
+    
+    
+    
+    
+    
+    </script>
+    
+    
+    
+</body>
+
+</html>
