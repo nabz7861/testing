@@ -270,8 +270,22 @@ createCollection: function(){
     
 
 addCourse: function() {
+    
+        var string = this.topic
+var exp = /(\w(=?@)\w+\.{1}[a-zA-Z]{2,})/i
+var test = exp.test(string);
+       if (test === false){
+        document.getElementById("demo").innerHTML = "Error";
+           return;
+       } 
 
      if (!this.topic ){
+        
+        alert('Recheck details');
+        return;
+    }
+    
+         if (!this.location ){
         
         alert('Recheck details');
         return;

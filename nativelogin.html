@@ -52,7 +52,7 @@
 
 
             <br>
-            <button v-on:click='addCourse' class=" button button1">login</button>
+            <button v-on:click='login' class="login button button1">login</button>
             <br>
             <br>
             <h2>
@@ -142,7 +142,7 @@
                 },
 
 
-                addCourse: function() {
+                login() {
 
                     if (!this.topic) {
 
@@ -158,13 +158,7 @@
                         return;
                     }
 
-
-
-                    users = JSON.parse(localStorage.getItem('users'));
-
-
-
-                    fetch(API + '/users/' + 'register', {
+                    fetch(API + '/logg/' + 'register', {
                         headers: {
                             "Content-Type": "application/json; charset=utf-8"
                         },
@@ -174,16 +168,22 @@
                             location: this.location,
                             type: this.selectOne,
 
-
-
                         })
 
 
                     }).then((res) => {
-                        if (res.status === 400) {
-                            document.getElementById("err").innerHTML = "This Username is taken";
-                        } else {
-                            window.location.reload()
+                        
+                    
+                        if (res.status === 200) {
+                            document.getElementById("err").innerHTML = "success";
+                        
+                        }
+                         if (res.status === 404) {
+                            document.getElementById("err").innerHTML = "err";
+                         
+                        }
+                        else {
+                            
                         }
 
                     }).catch((err) => {
@@ -191,46 +191,43 @@
                     })
                 },
 
-
-
-
                 catch (err) {
                     document.getElementById("err").innerHTML = err.message;
                 }
             },
 
 
-            created() {
-                //fetching all courses from database on page load
-
-
-
-                fetch(API + '/users/' + 'register', {
-                        method: 'GET',
-
-                        headers: {
-                            "Content-Type": "application/json; charset=utf-8"
-                        },
-                    }).then(res => res.json())
-                    .then(jsonData => {
-                        jsonData.forEach(element => {
-                            let newItem = {
-                                id: element._id,
-                                topic: element.topic,
-                                location: element.location
-
-
-
-                            };
-
-                            this.dbTable.push(newItem);
-
-                        });
-                    })
-                    .catch((err) => {
-                        console.log(err)
-                    })
-            },
+//            created() {
+//                //fetching all courses from database on page load
+//
+//
+//
+//                fetch(API + '/logg/' + 'register', {
+//                        method: 'GET',
+//
+//                        headers: {
+//                            "Content-Type": "application/json; charset=utf-8"
+//                        },
+//                    }).then(res => res.json())
+//                    .then(jsonData => {
+//                        jsonData.forEach(element => {
+//                            let newItem = {
+//                                id: element._id,
+//                                topic: element.topic,
+//                                location: element.location
+//
+//
+//
+//                            };
+//
+//                            this.dbTable.push(newItem);
+//
+//                        });
+//                    })
+//                    .catch((err) => {
+//                        console.log(err)
+//                    })
+//            },
 
 
         });

@@ -9,10 +9,14 @@ app.use(bodyParser.json())
 const MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectID;
 var url = "mongodb+srv://Nab:Hussain@cluster0-fwz7m.mongodb.net/fyp";
+//var url = "mongodb://localhost:27017/fyp";
+
 var dbo;
 MongoClient.connect(url, function(err, db) {
     if (err) throw err;
     dbo = db.db("fyp");
+    
+
     
     console.log("Database created!");
   });
@@ -177,19 +181,77 @@ app.put('/collections/:collectionName/:id', (req, res, next) => {
 
 //POST for USER data
 app.post('/users/:collectionName', (req, res, next) => {
+
     var collectionName = req.params.collectionName
-    var myobj = { topic: req.body.topic, location: req.body.location, type: req.body.type
+   var email = { topic: req.body.topic
               };
-      dbo.collection(collectionName).insertOne(myobj, function(err, result) {
-        if (err) throw err;
-        
-        res.json(result)
-         next();
+   var myobj = { topic: req.body.topic, location: req.body.location, type: req.body.type
+              };
+    dbo.collection(collectionName).findOne(email, function (err, result) {
+        if(err) throw err;
+        if (result) {
+            res.status(400).json({
+                statusText: 'Date and Time already exist!'
+            });
+            next();
+        } else {
+            dbo.collection(collectionName).insertOne(myobj, function (err, result) {
+                if (err) throw err;
+                res.json(result)
+                next();
+            });
+        }
     });
-    
 })
 
+app.post('/logg/:collectionName', (req, res, next) => {
+
+    var collectionName = req.params.collectionName
+   var email = { topic: req.body.topic
+              };
+   var myobj = { topic: req.body.topic, location: req.body.location, type: req.body.type
+              };
     
+      var nameandpassword = { topic: req.body.topic, location: req.body.location
+              };
+    
+    
+    dbo.collection(collectionName).findOne(nameandpassword, function (err, result) {
+      if (err) {
+            res.status(400).json({
+                statusText: 'err'
+            });
+         
+        }
+             if (!result) {
+            res.status(404).json({
+                statusText: 'success'
+            });
+            next();
+        }
+        
+        if (result) {
+            res.status(200).json({
+                statusText: 'success'
+            });
+            next();
+        } 
+    });
+})
+
+
+
+
+
+//user booking
+app.get('/logg/:collectionName', (req, res,next) => {
+    var collectionName = req.params.collectionName
+    dbo.collection(collectionName).find({}).toArray(function(err, result) {
+    if (err) throw err;
+    res.json(result)
+    });
+})
+
 
 
 
