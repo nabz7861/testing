@@ -16,8 +16,8 @@
 <body>
 	
     <div id="searchFilter">
-<label>Unique Patient Reference</label>
-<input type="text" v-model="valueQr" maxlength="20">
+<label>Hello </label>
+<input type="text" v-model="valueQr" maxlength="20"> 
 
 <hr>
   <qrcode :value='valueQr' :options="{ size: sizeQr }" ></qrcode>
@@ -180,7 +180,7 @@ selectOne: '',
 
 
 
-                    fetch(API + '/users/' + 'register', {
+                    fetch(API + '/qr/' + 'upload', {
                         headers: {
                             "Content-Type": "application/json; charset=utf-8"
                         },
@@ -219,7 +219,7 @@ selectOne: '',
 
 
 
-                fetch(API + '/users/' + 'register', {
+                fetch(API + '/qr/' + 'upload', {
                         method: 'GET',
 
                         headers: {
@@ -232,7 +232,7 @@ selectOne: '',
                                 id: element._id,
                                 topic: element.topic,
                                 location: element.location,
-                                type: element.type
+                                name: element.name
 
 
 
@@ -245,9 +245,9 @@ var myJSON = JSON.stringify(newItem);
 //        var txt = newItem;
 //var obj = JSON.stringify(txt);
                             
-                        this.valueQr = newItem.type;
+                        this.valueQr = newItem.name;
                             
-document.getElementById("myText").value = newItem.topic;
+document.getElementById("myText").value = newItem.name;
 
                             
 document.getElementById("demo").innerHTML = newItem.topic + ", " + newItem.location;

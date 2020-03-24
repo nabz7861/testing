@@ -15,6 +15,7 @@
 
 <body>
 	
+
     <div id="searchFilter">
 <label>VALUE QR:</label>
 <input type="text" v-model="valueQr" maxlength="20">
@@ -37,8 +38,25 @@
 
 <br>
 <br>
+        <div>
+
+ 
+  <template v-if="show">
+      
+      
+    <h1>Heading</h1>
+  
+  </template>
+
+  
+            <button @click="show = ! show">Switch</button>
+</div>
 
         <center>
+            
+             <input type="text" id="myInput" placeholder="Name" v-model='name'>
+            <br><br>
+            
             <input type="email" id="myInput" placeholder="Email" v-model='topic'>
 
             <br> <br>
@@ -113,9 +131,11 @@
     el: '#searchFilter',
     data:{
     valueQr:'',
+        name: '',
  dbTable: [],
 selectOne: '',
     page: '',
+        show: true,
     selectOne: '',
 
      topic: '',
@@ -178,7 +198,7 @@ selectOne: '',
 
 
 
-                    fetch(API + '/users/' + 'register', {
+                    fetch(API + '/qr/' + 'upload', {
                         headers: {
                             "Content-Type": "application/json; charset=utf-8"
                         },
@@ -186,7 +206,7 @@ selectOne: '',
                         body: JSON.stringify({
                             topic: this.topic,
                             location: this.location,
-                            type: this.valueQr,
+                            name: this.name,
 
 
 
@@ -217,7 +237,7 @@ selectOne: '',
 
 
 
-                fetch(API + '/users/' + 'register', {
+                fetch(API + '/qr/' + 'upload', {
                         method: 'GET',
 
                         headers: {
