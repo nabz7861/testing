@@ -370,10 +370,14 @@ app.get('/booked/:collectionName', (req, res,next) => {
 app.post('/booked/:collectionName', (req, res, next) => {
     var collectionName = req.params.collectionName
 
-    var myobj = {
+
+    var fiq = {
         date: req.body.date, time: req.body.time
     };
-    dbo.collection(collectionName).findOne(myobj, function (err, result) {
+    var myobj = {
+        date: req.body.date, time: req.body.time,  topic: req.body.topic, name: req.body.name, description: req.body.description,
+    };
+    dbo.collection(collectionName).findOne(fiq, function (err, result) {
         if(err) throw err;
         if (result) {
             res.status(400).json({
