@@ -14,20 +14,19 @@
 </head>
 
 <body>
-	
-
-    <div id="searchFilter">
-<label>VALUE QR:</label>
-<input type="text" v-model="valueQr" maxlength="20">
-
-<hr>
-  <qrcode :value='valueQr' :options="{ size: sizeQr }" ></qrcode>
-  
-  <button @click="myFunction()">Click Me</button>
+<div id="searchFilter">
+    
         
         
    <h1>Registration </h1>
-        Name: <input type="text" id="myText" value="">
+       
+       
+<a href='patientlogin.html' v-bind:class="{active: page==='home'}">log</a>
+
+<a href='loggedbooking.html' v-bind:class="{active: page==='userpage'}">cal</a>
+
+<a href='waitinglistpractice.html' v-bind:class="{active: page==='userpage'}">waiting </a>
+
 
 
         <link href="https://fonts.googleapis.com/css?family=Sacramento&display=swap" rel="stylesheet">
@@ -44,12 +43,12 @@
   <template v-if="show">
       
       
-    <h1>Heading</h1>
+<!--    <h1>Heading</h1>-->
   
   </template>
 
   
-            <button @click="show = ! show">Switch</button>
+<!--            <button @click="show = ! show">Switch</button>-->
 </div>
 
         <center>
@@ -62,26 +61,13 @@
             <br> <br>
             <input type="password" id="myInput" placeholder="Password" v-model='location'>
             <br><br>
-            <section>
-                <h3>Who are you?</h3>
-
-                <br>
-
-                <select v-model="selectOne">
-                    <option>student</option>
-                    <option selected>provider</option>
-
-                </select>
-
-                <span>you are a {{ selectOne }}</span>
-                <br> <br>
-            </section>
+       
 
 
 
 
             <br>
-            <button v-on:click='addCourse' class=" button button1">login</button>
+            <button v-on:click='addCourse' class=" button button1">Login</button>
             <br>
             <br>
             <h2>
@@ -96,17 +82,7 @@
         <br><br><br><br><br><br>
         <br><br><br><br><br><br>
 
-        <h3>Lastest logged user</h3>
-        <table id="myTable">
-            <tr class="header">
-
-
-            </tr>
-            <tr v-for='course in dbTable' class='course'>
-                <td>{{course.topic}}</td>
-
-            </tr>
-        </table>      
+          
         
         
         
@@ -218,6 +194,7 @@ selectOne: '',
                             document.getElementById("err").innerHTML = "This Username is taken";
                         } else {
                             window.location.reload()
+                                document.getElementById("err").innerHTML = "Success";
                         }
 
                     }).catch((err) => {

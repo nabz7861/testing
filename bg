@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html>
+
+<body><script type="text/javascript" ></script>
+<script src="https://unpkg.com/vue"></script>    
+      <link rel="stylesheet" type="text/css" href="cc1css.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+<!--    <script> src="/app.js" </script>-->
+    
+  
+    <div id="searchFilter">
+    
+    <p id="result">
+   
+
+<h3>Database table</h3>
+<table id="myTable">
+    <tr class="header">
+      <th >Topic</th>
+      <th >Location</th>
+      <th >Price</th>
+      <th >Rating</th>
+      <th >Delete</th    >
+      <th >Update</th>
+    </tr>
+    <tr v-for='course in dbTable' class='course'>
+      <td >{{course.topic}}</td>
+      <td >{{course.location}}</td>
+      <td >{{course.price}}</td>
+      <td >{{course.rating}}</td>  
+      <td><button v-on:click='deleteItem(course.id)' class="button1">Delete</button></td>    
+      <td><button v-on:click='Update(course.id,course.topic,course.location,course.price,course.rating)' class="button1">Update</button></td>    
+    </tr>
+</table>
+    <h2>filter by provider</h2>
+    <button v-on:click='addjohn()' class=" button button1" >John</button>
+      <button v-on:click='addsteve()' class=" button button1" >Steve</button>
+     
+    <br>     <br>   
+ 
+
+
+    
+  
+<br><br><br><br><br><br>
+    <br><br><br><br><br><br>
+
+<h2>Filter</h2>
+<!-- filter -->
+<select multiple v-model='userLocations'>
+    <option v-for='location in getLocations'>
+    {{location}}
+    </option>
+</select>
+
+<br><br>
+    <br><br>
+<h2>Course Table</h2>
+<table id="myTable">
+  <tr class="header">
+    <th >Topic</th>
+    <th >Location</th>
+    <th >Price</th>
+    <th >Rating</th>
+      
+  </tr>
+  <tr v-for='course in results' class='course'>
+    <td>{{course.topic}}</td>
+    <td>{{course.location}}</td>
+    <td>{{course.price}}</td>
+    <td>{{course.rating}}</td>
+      
+    <td><button v-on:click='add2bucket(course.topic,course.location,course.price,course.rating)' class="button1">Add to Basket</button>
+<!--       <button @click="remove(index)">&times;</button>-->
+      </td>
+      
+  </tr>
+</table>
+<br/>
+
+    
+    
+
+     
+
+<script>
+    
+    
+         Vue.component('toplinks', {
+props: ['page'],
+template: `<div>
+<a href='registerlastest.html' v-bind:class="{active: page==='home'}">Register</a>
+
+<a href='courses23JAN.html' v-bind:class="{active: page==='userpage'}">Courses</a>
+
+<a href='review.html' v-bind:class="{active: page==='userpage'}">Review</a>
+<a href='catchme.html' v-bind:class="{active: page==='userpage'}">catchme</a>
+
+<a href='r1egtest.html' v-bind:class="{active: page==='userpage'}">user-login</a>
+
+
+<a href='login.html' v-bind:class="{active: page==='course'}">site</a>
+
+</div>`
+})
+
+const API = "http://localhost:3000"; 
+
+var courses = [
+    
+{ 'topic': 'english', 'location': 'england', 'price': 100, 'rating': 3 },
+    { 'topic': 'maths', 'location': 'england', 'price': 100, 'rating': 3 },
+    { 'topic': 'english', 'location': 'france', 'price': 2, 'rating': 1 },
+        { 'topic': 'it', 'location': 'ireland', 'price': 4, 'rating': 5 },
+    { 'topic': 'maths', 'location': 'germany', 'price': 100, 'rating': 3 },
+    { 'topic': 'english', 'location': 'france', 'price': 2, 'rating': 1 },
+        { 'topic': 'it', 'location': 'ireland', 'price': 4, 'rating': 5 },
+    
+
+];
+    
+    
+    
+    ////////
+
+
+// fetch('/collections/messages', {
+//   headers: {  "Content-Type": "application/json; charset=utf-8" },
+//   method: 'POST',
+//   body: ({ username: 'one', password: 'example',
+  
+//   })
+// })
+    
+    
+
+
+//function getUser(name){
+// fetch(`http://localhost:3000/collections/messages`)
+//  .then(function(response) {
+//    return response.json();
+//  })
+//  .then(function(json) {
+//    console.log(json);
+//  });
+//};
+//
+////get user data
+//getUser('yourUsernameHere');
+
+
+
+//courses.pop()
+
+   localStorage.setItem("courses", JSON.stringify(courses));    
+
+var courses = JSON.parse(localStorage.getItem("courses"));
+  
+var searchApp = new Vue({
+el: '#searchFilter',
+
+data: {
+checkto: true,
+term: '',
+bucket:[],
+        topic: "",
+                location: "",
+     listOfItems: ["Student", "Provider"],
+                hideElement: false,
+                seen: false,
+                selectedItem: "",
+dbTable:[],
+    page:'',
+stevetable:[],
+providerTable:[],
+userLocations: [],
+newdbcollection:'', // //not using delete use other
+dbcollection:'',
+//test start
+    Providerreview:'',
+               bucket: [],
+price:'',
+ratingg:'',
+provider:'',  
+//test end
+updatedTopic:'',
+updatedLocation:'',
+updatedPrice:'',
+updatedRating:'',
+itemID:'',
+locations: this.location,
+topic: this.topic,
+courses: []   
+},
+
+ methods: {
+
+            //not using
+            isLocationSelected(location) {
+                return this.userLocations.includes(location);
+            },
+            //using
+            filterByLocation(location) {
+                this.userLocations.push(location);
+            },
+            onOpenDrawerTap() {
+                this.$refs.drawer.showDrawer();
+            },
+            onCloseDrawerTap() {
+                this.$refs.drawer.closeDrawer();
+            },
+            onToggleDrawerTap() {
+                this.$refs.drawer.toggleDrawerState();
+            },
+            sortAscend() {
+                console.log("sortAscend pressed.");
+            },
+            sortDescend() {
+                console.log("sortDescend pressed.");
+            },
+            showcourse() {
+                this.courses = [];
+                this.fetchCourses();
+            },
+            deleteItem(id) {
+                this.courses = this.courses.filter(course => course.id !==
+                id);
+            },
+
+            reset() {
+                this.userLocations = [];
+                this.term = "";
+            },
+            high2low() {
+                this.courses = this.courses.sort(
+                    (prev, curr) => curr.price - prev.price
+                );
+                this.userLocations = [];
+            },
+            low2high() {
+                this.courses = this.courses.sort(
+                    (prev, curr) => prev.price - curr.price
+                );
+                this.userLocations = [];
+            },
+            fetchCourses() {
+                fetch(API + "/collections/" + "courses")
+                    .then(res => res.json())
+                    .then(jsonData => {
+                        jsonData.forEach(element => {
+                            const newItem = {
+                                id: element._id,
+                                topic: element.topic,
+                                location: element.location,
+                                price: element.price,
+                                rating: element.rating
+                            };
+
+                            this.courses.push(newItem);
+                            // this.dbTable.push(newItem);
+                            // document.getElementById('result').innerHTML = newItem;
+                        });
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+            },
+
+            signup() {
+                let newuser = {
+                    topic: this.topic,
+                    location: this.location,
+                    type: this.selectedItem
+                };
+                var string = this.topic;
+                var exp = /(\w(=?@)\w+\.{1}[a-zA-Z]{2,})/i;
+                var test = exp.test(string);
+                if (!this.location || test === false) {
+                    this.seen = false;
+                    var dialogs = require("tns-core-modules/ui/dialogs");
+                    dialogs
+                        .alert({
+                            title: "Email not valid ",
+                            message: "recheck",
+                            okButtonText: "RETRY"
+                        })
+                        .then(function() {
+                            console.log("Dialog closed!");
+                        });
+                }
+
+                if (this.location && test === true) {
+                    var dialogs = require("tns-core-modules/ui/dialogs");
+
+                    this.seen = true;
+
+                    // dialogs
+                    //     .alert({
+                    //         title: "successfull",
+                    //         message: "",
+                    //         okButtonText: "ok"
+                    //     })
+                    //     .then(function() {
+                    //         console.log("Dialog closed!");
+                    //     });
+
+                    fetch(API + "/users/" + "register", {
+                            headers: {
+                                "Content-Type": "application/json; charset=utf-8"
+                            },
+                            method: "post",
+                            body: JSON.stringify({
+                                topic: this.topic,
+                                location: this.location,
+                                type: this.selectedItem
+                            })
+                        })
+                        .then(res => {
+                            if (res.status === 400) {
+                                this.seen = false;
+                                // database error message
+
+                                var dialogs = require(
+                                    "tns-core-modules/ui/dialogs");
+                                dialogs
+                                    .alert({
+                                        title: "Sorry this combination is taken ",
+                                        message: "",
+                                        okButtonText: "ok"
+                                    })
+                                    .then(function() {
+                                        console.log("Dialog closed!");
+                                    });
+                            }
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        });
+                    console.log(newuser);
+
+                    // console.log(this.topic);
+
+                    // console.log(this.location);
+                }
+            },
+            onButtonTap() {
+                console.log("Button was pressed");
+            },
+
+            login() {
+                // if (!this.topic) {
+                //     var dialogs = require("tns-core-modules/ui/dialogs");
+                //     dialogs
+                //         .alert({
+                //             title: "all fields required",
+                //             message: "recheck",
+                //             okButtonText: "RETRY"
+                //         })
+                //         .then(function() {
+                //             console.log("Dialog closed!");
+                //         });
+                // }
+
+                var string = this.topic;
+                var exp = /(\w(=?@)\w+\.{1}[a-zA-Z]{2,})/i;
+                var test = exp.test(string);
+                if (test === false) {
+                    console.log("error2");
+                }
+
+                fetch(API + "/logg/" + "register", {
+                        headers: {
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        method: "post",
+                        body: JSON.stringify({
+                            topic: this.topic,
+                            location: this.location,
+                            type: this.selectOne
+                        })
+                    })
+                    .then(res => {
+                        if (res.status === 200) {
+                            var dialogs = require(
+                                "tns-core-modules/ui/dialogs");
+                            dialogs
+                                .alert({
+                                    title: "Login Successfull",
+                                    message: "",
+                                    okButtonText: "ok"
+                                })
+                                .then(function() {
+                                    console.log("Dialog closed!");
+                                });
+
+                            console.log("successfull");
+                        }
+                        if (res.status === 404) {
+                            // this.loginelement = !this.loginelement;
+
+                            var dialogs = require(
+                                "tns-core-modules/ui/dialogs");
+                            dialogs
+                                .alert({
+                                    title: "Recheck your details",
+                                    message: "",
+                                    okButtonText: "ok"
+                                })
+                                .then(function() {
+                                    console.log("Dialog closed!");
+                                });
+
+                            console.log("error4");
+                        } else {}
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+            }
+        },
+        created() {
+            //fetching all courses from database on page load
+            this.fetchCourses();
+        },
+
+        computed: {
+            getLocations() {
+                // update option list
+                return [...new Set(this.courses.map(x => x.topic))];
+            },
+            results() {
+                return this.courses.filter(course => {
+                    // search condition
+                    var searchCourse = course.topic
+                        .toLowerCase()
+                        .includes(this.term.toLowerCase());
+                    // filter condition
+                    var filterCourse =
+                        this.userLocations.length == 0 ||
+                        this.userLocations.includes(course.topic);
+                    // combine the result
+                    return searchCourse && filterCourse;
+                });
+            }
+        }
+    
+});
+
+</script>
+
+
+</body>
+</html>

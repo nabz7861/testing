@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+     <script src="https://smtpjs.com/v3/smtp.js">
+        
+</script>
+        <script src="https://unpkg.com/vue"></script>    
+        <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>   
+    
+    
+    <style>
+    
+        .container {
+    width: 400px;
+}
+    
+    </style>
+       
+   
+
+	
+</head>
+
+<body>
+	
+    
+    <div id="app">
+         <h2>
+                <p id="demo">
+            </h2>
+            <h2>
+                <p id="err">
+            </h2>
+          
+
+       
+<a href='patientlogin.html' v-bind:class="{active: page==='home'}">log</a>
+
+<a href='workngQRREG.html' v-bind:class="{active: page==='userpage'}">reg</a>
+
+<a href='waitinglistpractice.html' v-bind:class="{active: page==='userpage'}">Review</a>
+
+
+
+
+
+  <v-app>
+    <v-content>
+      <v-container>
+        <div class="text-center title"><h1>Select a Date & Time</h1></div>
+        <v-row justify="center">
+            <v-date-picker
+              v-model="date"
+              :allowed-dates="allowedDates"
+              class="mt-4"
+              min="2019-10-10"
+              max="2022-03-20"
+            ></v-date-picker>
+          <v-slide-y-transition>
+            <v-col cols=2 v-show="date !== null">
+              <template v-for="allowedTime in allowedTimes">
+                <v-btn
+                  @click="setTime(allowedTime)"
+                  class="my-2"
+                  :outlined="allowedTime !== time"
+                  block
+                  x-large
+                  color="primary"
+                >{{ allowedTime }}</v-btn>
+              </template>
+            </v-col>
+          </v-slide-y-transition>
+        </v-row>
+      </v-container>
+    </v-content>
+  </v-app>
+        <br>
+        
+<!--        input field-->
+         
+        <h1>State your issue</h1>
+                <v-text-field
+                   
+                    textarea
+               
+                    counter
+                    v-model="description"
+                > </v-text-field>
+     
+        
+        
+        
+        <br>
+        
+        
+        
+        <button v-on:click='addCourse()' class="button1">Book</button>
+</div>
+	
+    
+    
+    <script>
+        
+        
+          const API = "http://localhost:3000"; 
+    
+new Vue({
+  el: '#app',
+  vuetify: new Vuetify(),
+  data: () => ({
+    date: null,
+    time: null,
+    dbTable: [],
+       description: '',
+        name: '',
+      topic: '',
+    allowedTimes: ['8:30 am','9:00am','10:30am','1:30pm','3:30 pm']
+  }),
+  
+  methods: {
+      allowedDates: val => parseInt,setTime(time) {
+      this.time = time
+          
+           console.log(time)
+       console.log(this.date)
+          
+          
+    },
+      
+      
+      
+      
+      
+          addCourse: function() { 
+              
+                            fetch(API + '/qr/' + 'currentlogged', {
+                        method: 'GET',
+
+                        headers: {
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                    }).then(res => res.json())
+                    .then(jsonData => {
+                        jsonData.forEach(element => {
+                            let newItem = {
+                                id: element._id,
+                                topic: element.topic,
+                                name: element.name
+                                
+
+
+
+                            };
+
+                            this.dbTable.push(newItem);
+                            
+console.log(newItem);
+var myJSON = JSON.stringify(newItem);           
+//        var txt = newItem;
+//var obj = JSON.stringify(txt);
+                            
+document.getElementById("demo").value = newItem.topic;
+                            
+                                       
+
+                            
+                            
+                          
+            fetch(API + '/booked/' + 'datetime', {
+                    headers: {"Content-Type": "application/json; charset=utf-8"},
+                    method: 'post',
+                    body: JSON.stringify({
+                        date: this.time,
+                        time: this.date,
+                        topic: newItem.topic,
+                        name: newItem.name,
+                        description: this.description,
+                      
+                    })
+                }).then((res) => {
+                    if (res.status === 400) {
+                        alert('Date and Time already exists!')
+                    } else {
+                        
+                        
+    
+                        
+                        /// smtp.js libaray
+                        // email client ftpnabz@hotmail.com pass 
+    Email.send({
+    SecureToken : "6919eb50-0655-4f1b-b3dd-feaa99a6aeff",
+    To : 'ftpnabz@hotmail.com',
+    From : "ftpnabz@hotmail.com",
+    Subject : "APPOINTMENT CONFIRMED",
+    Body : "Hi " + newItem.name + " your Appointment has been confirmed at our medical centre  for " +  this.date + " at " + this.time
+    
+        
+        
+        
+        
+        
+        
+}).then(
+  message => alert(message)
+);
+ 
+                        
+                        
+                        
+//                        window.location.reload()
+                        
+                        
+                    }
+
+                }).catch((err) => {
+                    console.log(err)
+                })
+
+                            
+
+
+                        });
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    })  
+              
+              
+              
+              
+            
+},
+      
+      
+      
+    
+    },
+//    
+    created() {
+                //fetching all courses from database on page load
+
+
+
+                fetch(API + '/qr/' + 'currentlogged', {
+                        method: 'GET',
+
+                        headers: {
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                    }).then(res => res.json())
+                    .then(jsonData => {
+                        jsonData.forEach(element => {
+                            let newItem = {
+                                id: element._id,
+                                topic: element.topic,
+                                name: element.name
+
+
+
+                            };
+
+                            this.dbTable.push(newItem);
+                            
+console.log(newItem);
+var myJSON = JSON.stringify(newItem);           
+//        var txt = newItem;
+//var obj = JSON.stringify(txt);
+                            
+//document.getElementById("myText").value = newItem.topic;
+
+                            
+document.getElementById("demo").innerHTML = "You are logged in as" + " " + newItem.name ;
+
+                        });
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    })
+            }, 
+    
+    
+})
+    
+    
+    </script>
+</body>
+
+</html>

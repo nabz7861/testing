@@ -1,0 +1,186 @@
+<!doctype html>
+<html>
+
+  <head>
+    
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+       <link rel="stylesheet" type="text/css" href="cc1css.css">
+
+    <script src="https://unpkg.com/vue@2.6.10/dist/vue.min.js"></script>
+    <script src="https://unpkg.com/vue-qrcode-reader@2.0.3/dist/vue-qrcode-reader.browser.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/vue-qrcode-reader@2.0.3/dist/vue-qrcode-reader.css">
+  </head>
+
+  <body>
+    
+<a href='waitinglistpractice.html' v-bind:class="{active: page==='home'}">back</a>
+
+
+
+    <div id="app">
+        
+
+      <p>
+        Patient <b>{{ decodedContent }}</b>
+      </p>
+        
+          <p id="err">
+
+         <button v-on:click='addCourse' class=" button button1">confirm</button>
+      <p class="error">
+        {{ errorMessage }}
+      </p>
+
+      <qrcode-stream @decode="onDecode" @init="onInit"></qrcode-stream>
+    </div>
+  </body>
+    
+                     
+  <script>
+       const API = "http://localhost:3000";
+    new Vue({
+      el: '#app',
+
+      data() {
+        return {
+          decodedContent: '',
+          errorMessage: ''
+        }
+      },
+
+      methods: {
+        onDecode(content) {
+          this.decodedContent = content
+        },
+
+        onInit(promise) {
+          promise.then(() => {
+              console.log('Successfully initilized! Ready for scanning now!')
+            })
+            .catch(error => {
+              if (error.name === 'NotAllowedError') {
+                this.errorMessage = 'no access'
+              } else if (error.name === 'NotSupportedError') {
+                this.errorMessage = 'error2'
+              }  else if (error.name === 'OverconstrainedError') {
+                this.errorMessage = 'error1'
+              } else {
+                this.errorMessage = 'UNKNOWN ERROR: ' + error.message
+              }
+            })
+        },
+            createCollection: function() {
+
+                    fetch(API + '/createCollection', {
+                        headers: {
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        method: 'post',
+                        body: JSON.stringify({
+                            collection: this.newdbcollection
+                        })
+                    }).then((res) => {
+                        console.log(res)
+                    }).catch((err) => {
+                        console.log(err)
+                    })
+                },
+
+
+                addCourse: function() {
+
+                  
+
+
+                    fetch(API + '/slot/' + 'confirmed', {
+                        headers: {
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        method: 'post',
+                        body: JSON.stringify({
+                            name: this.decodedContent,
+                    
+
+
+
+                        })
+
+
+                    }).then((res) => {
+                        if (res.status === 400) {
+                            document.getElementById("err").innerHTML = "You are already booked";
+                        } if (res.status === 404) {
+                            document.getElementById("err").innerHTML = "Not booked";
+                        } else {
+//                            window.location.reload()
+                            
+                              document.getElementById("err").innerHTML = "Patient booked";
+                        }
+
+                    }).catch((err) => {
+                        console.log(err)
+                    })
+                },
+
+
+
+
+                catch (err) {
+                    document.getElementById("err").innerHTML = err.message;
+                }
+            },
+
+
+            created() {
+                //fetching all courses from database on page load
+
+
+
+                fetch(API + '/users/' + 'register', {
+                        method: 'GET',
+
+                        headers: {
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                    }).then(res => res.json())
+                    .then(jsonData => {
+                        jsonData.forEach(element => {
+                            let newItem = {
+                                id: element._id,
+                                topic: element.topic,
+                                location: element.location
+
+
+
+                            };
+
+                            this.dbTable.push(newItem);
+                            
+console.log(newItem);
+var myJSON = JSON.stringify(newItem);           
+//        var txt = newItem;
+//var obj = JSON.stringify(txt);
+                            
+document.getElementById("myText").value = newItem.topic;
+
+                            
+document.getElementById("demo").innerHTML = newItem.topic + ", " + newItem.location;
+
+                        });
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    })
+            },
+
+          
+          
+          
+      })
+    
+
+  </script>
+
+</html>

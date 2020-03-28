@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+     <style>
+
+    table {
+    counter-reset: rowNumber;
+}
+
+table tr {
+    counter-increment: rowNumber;
+}
+
+table tr td:first-child::before {
+    content: counter(rowNumber);
+    min-width: 1em;
+    margin-right: 0.5em;
+}
+
+    </style>
+
+<body><script type="text/javascript" ></script>
+<script src="https://unpkg.com/vue"></script>    
+      <link rel="stylesheet" type="text/css" href="cc1css.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+<!--    <script> src="/app.js" </script>-->
+    
+             <div>
+<a href='newr.html' v-bind:class="{active: page==='home'}">QR</a>
+
+
+</div>
+
+    
+    <p id="result">
+    <h1>Medical centre</h1>
+    
+<!--       <link rel="stylesheet" type="text/css" href="cc1css.css">-->
+
+
+    <link href="https://fonts.googleapis.com/css?family=Sacramento&display=swap" rel="stylesheet">
+
+<div id="searchFilter">
+    
+
+
+
+  <h2>List of upcoming patients</h2>
+<h2>Queue</h2>
+
+
+        <table id="myTable">
+  <tr class="header">
+    <th >Po.</th>
+    <th >Patient</th>
+
+
+  </tr>
+        </table>
+
+<table id="myTable">
+
+  <tr v-for='course in dbTable' class='course' >
+       <td></td>
+    <td >
+        {{ course.name }}
+    </td>
+      <td><button v-on:click='deleteItem(course.id)' class="button1">Delete</button></td> 
+<!--        <td>{{course.name}}</td>-->
+    <td></td>
+
+  </tr>
+</table>
+<br/>
+
+</div>
+    
+    
+    
+
+
+<script>
+    
+    
+    
+
+const API = "http://localhost:3000"; 
+
+var courses = [
+    
+{ 'topic': 'english', 'location': 'england', 'price': 100, 'rating': 3 },
+    { 'topic': 'maths', 'location': 'england', 'price': 100, 'rating': 3 },
+    { 'topic': 'english', 'location': 'france', 'price': 2, 'rating': 1 },
+        { 'topic': 'it', 'location': 'ireland', 'price': 4, 'rating': 5 },
+    { 'topic': 'maths', 'location': 'germany', 'price': 100, 'rating': 3 },
+    { 'topic': 'english', 'location': 'france', 'price': 2, 'rating': 1 },
+        { 'topic': 'it', 'location': 'ireland', 'price': 4, 'rating': 5 },
+    
+
+];
+    
+    
+    
+
+   localStorage.setItem("courses", JSON.stringify(courses));    
+
+var courses = JSON.parse(localStorage.getItem("courses"));
+  
+var searchApp = new Vue({
+el: '#searchFilter',
+
+data: {
+checkto: true,
+term: '',
+bucket:[],
+dbTable:[],
+    page:'',
+stevetable:[],
+name: '',
+providerTable:[],
+userLocations: [],
+newdbcollection:'', // //not using delete use other
+dbcollection:'',
+//test start
+    Providerreview:'',
+topic:'',
+location:'',
+price:'',
+ratingg:'',
+provider:'',  
+//test end
+updatedTopic:'',
+updatedLocation:'',
+updatedPrice:'',
+updatedRating:'',
+itemID:'',
+},
+
+methods: {
+reset: function () {
+this.userLocations = [];
+    
+},
+    
+     
+    
+
+    
+
+createCollection: function(){
+
+  fetch(API+'/createCollection', {
+  headers: {  "Content-Type": "application/json; charset=utf-8" },
+  method: 'post',
+  body: JSON.stringify({
+        collection: this.newdbcollection})
+  }).then((res)=>{
+      console.log(res)
+  }).catch((err)=>{
+      console.log(err)
+  })
+},
+
+addCourse: function() {
+
+  fetch(API+'/collections/'+'courses', {
+  headers: {  "Content-Type": "application/json; charset=utf-8" },
+  method: 'post',
+  body: JSON.stringify({
+        topic: this.topic,
+        location: this.location,
+        price: this.price,
+        rating: this.ratingg,
+    })
+  }).then((res)=>{
+    window.location.reload()
+  }).catch((err)=>{
+      console.log(err)
+  })
+},
+    
+    
+showcourse: function() {
+
+  fetch(API+'/addcourses/'+'courses', {
+  headers: {  "Content-Type": "application/json; charset=utf-8" },
+  method: 'post',
+
+      
+  }).then((res)=>{
+    window.location.reload()
+  }).catch((err)=>{
+      console.log(err)
+  })
+},
+    
+    
+
+
+deleteItem: function(id) {
+    fetch(API+'/slot/'+'confirmed/'+ id, {
+  headers: {  "Content-Type": "application/json; charset=utf-8" },
+  method: 'delete',
+  }).then((res)=>{
+    window.location.reload()
+  }).catch((err)=>{
+      console.log(err)
+  })
+},
+
+Update: function(id,topic,location,price,rating) {
+  this.updatedTopic = topic;
+  this.updatedLocation = location;
+  this.updatedPrice = price;
+  this.updatedRating = rating;
+  this.itemID = id;
+},
+
+updateItem: function() {
+    fetch(API+'/collections/'+'courses/'+ this.itemID, {
+  headers: {  "Content-Type": "application/json; charset=utf-8" },
+  method: 'put',
+  body: JSON.stringify({
+        topic: this.updatedTopic,
+        location: this.updatedLocation,
+        price: this.updatedPrice,
+        rating: this.updatedRating,
+    })
+  }).then((res)=>{
+    window.location.reload()
+  }).catch((err)=>{
+      console.log(err)
+  })
+}
+
+},
+    
+
+
+    
+created() {
+//fetching all courses from database on page load
+fetch(API+'/slot/'+'confirmed', {
+  method:'GET',
+  headers: {  "Content-Type": "application/json; charset=utf-8" },
+}).then(res => res.json())
+  .then(jsonData => {
+          jsonData.forEach(element => {
+            let newItem = {
+      id: element._id,
+
+    name: element.name
+                
+        
+        };
+
+        this.dbTable.push(newItem);
+//               document.getElementById('result').innerHTML = newItem;
+       
+          });
+  })
+    .catch((err) => {
+    console.log(err)
+})
+},
+
+
+
+computed: {
+locations: function () {
+// update option list
+return [...new Set(this.results.map(x => x.location))]
+},
+results: function () {
+return courses.filter(course => {
+// search condition
+var searchCourse = course.topic.includes(this.term);
+// filter condition
+var filterCourse = this.userLocations.length == 0 ||
+this.userLocations.includes(course.location);
+// combine the result
+return searchCourse && filterCourse;
+})
+},
+},
+    
+});
+
+</script>
+
+
+</body>
+</html>

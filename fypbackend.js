@@ -235,6 +235,25 @@ app.get('/slot/currentlogged', (req, res,next) => {
 })
 
 
+app.delete('/slot/:collectionName/:id', (req, res, next) => {
+    dbo.collection(req.params.collectionName).deleteOne({ _id: ObjectId(req.params.id) }, (e, result) => {
+    if (e) return next(e)
+    res.send((result.result.n === 1) ? { msg: 'success' } : { msg: 'error' })
+    })
+})
+
+
+
+
+
+app.get('/slot/confirmed', (req, res,next) => {
+    var collectionName = 'confirmed'
+    dbo.collection(collectionName).find({}).toArray(function(err, result) {
+    if (err) throw err;
+    res.json(result)
+    });
+})
+
 
 
 //POST for USER data
@@ -245,6 +264,28 @@ app.post('/slot/:collectionName', (req, res, next) => {
               };
    var myobj = { topic: req.body.topic, location: req.body.location, type: req.body.type
               };
+
+
+
+
+              dbo.collection("datetime").findOne(email, function (err, result) {
+                if(err) throw err;
+                if (!result) {
+                    res.status(404).json({
+                        statusText: 'Date and Time already exist!'
+                    });
+                    next();
+                } else {
+                    // dbo.collection(collectionName).insertOne(email, function (err, result) {
+                    //     if (err) throw err;
+                    //     res.json(result)
+                    //     next();
+                    // });
+              
+
+
+
+
     dbo.collection(collectionName).findOne(email, function (err, result) {
         if(err) throw err;
         if (result) {
@@ -259,7 +300,10 @@ app.post('/slot/:collectionName', (req, res, next) => {
                 next();
             });
         }
-    });
+    })
+
+}
+});
 })
 
 //new login qr

@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    <script type="text/javascript"></script>
+    <script src="https://unpkg.com/vue"></script>
+    <link rel="stylesheet" type="text/css" href="cc1css.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="manifest" href="website.webmanifest">
+
+    <script src="https://xkeshi.github.io/vue-qrcode/js/vue-qrcode.js"></script>
+    <link rel="icon" type="image/x-icon" href="" />
+
+
+    <div id="searchFilter">
+
+        <center>
+            <table id="myTable">
+                <tr class="header">
+
+
+                </tr>
+                <tr v-if="logged" v-for='course in dbTable' class='course'>
+                    <td> you are logged in as {{course.name}}</td>
+
+                </tr>
+            </table>
+
+        </center>
+        <div>
+
+            <center>
+                <button v-on:click='deletea'>logout</button>
+
+
+                <h1>Login </h1>
+
+
+                <link href="https://fonts.googleapis.com/css?family=Sacramento&display=swap" rel="stylesheet">
+
+
+
+
+
+
+                <div id="navigation">
+                    <toplinks v-bind:page=page></toplinks>
+                </div>
+            </center>
+            <br> <br> <br>
+
+
+            <center>
+
+                <input type="text" id="myInput" placeholder="Confirm name" v-model='name'>
+
+                <br> <br>
+                <input type="email" id="myInput" placeholder="Email" v-model='topic'>
+
+                <br> <br>
+                <input type="password" id="myInput" placeholder="Password" v-model='location'>
+                <br><br>
+           
+
+
+
+
+                <br>
+                <button v-on:click='addCourse' class=" button button1">login</button>
+                <br>
+
+                <br>
+
+                <h2>
+                    <p id="demo">
+                </h2>
+                <h2>
+                    <p id="err">
+                </h2>
+            </center>
+
+            <br> <br>
+            <br><br><br>
+
+            <template v-if="show">
+
+
+    <center>
+
+
+                <h2>Hello</h2>
+                <input type="text" v-model="valueQr" maxlength="20">
+                <br> <br> <br> <br>
+            
+                    <br>
+                   
+                    <qrcode :value='valueQr' :options="{ size: sizeQr }"></qrcode>
+                    <br> <br> <br>
+
+                    <button @click="myFunction()">reload</button>
+                    <button @click="show = ! show">View my Id</button>
+                </center>
+
+            </template>
+
+
+
+        </div>
+
+
+        <br><br><br>
+        <br><br><br><br><br><br>
+
+
+
+    </div>
+
+
+
+    <script>
+        const API = "http://localhost:3000";
+
+        Vue.component('toplinks', {
+//            props: ['page'],
+            template: `<div>
+<a href='loggedbooking.html' v-bind:class="{active: page==='home'}">book</a>
+
+<a href='workngQRREG.html' v-bind:class="{active: page==='userpage'}">reg</a>
+
+<a href='waitinglistpractice.html' v-bind:class="{active: page==='userpage'}">Review</a>
+
+
+
+
+</div>`
+        })
+
+
+        var Vue = window.Vue;
+        var VueQrcode = window.VueQrcode;
+
+        Vue.component('qrcode', VueQrcode);
+
+
+        var searchApp = new Vue({
+            el: '#searchFilter',
+
+            data: {
+                dbTable: [],
+                selectOne: '',
+                page: '',
+                name: '',
+                logged: '',
+                selectOne: '',
+                currentlog: '',
+                show: '',
+                trust: '',
+
+                valueQr: '',
+
+                topic: '',
+                valueQr: '',
+                sizeQr: 200,
+                location: '',
+
+            },
+
+            methods: {
+                reset: function() {
+                    this.userLocations = [];
+
+                },
+
+                createCollection: function() {
+
+                    fetch(API + '/createCollection', {
+                        headers: {
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        method: 'post',
+                        body: JSON.stringify({
+                            collection: this.newdbcollection
+                        })
+                    }).then((res) => {
+                        console.log(res)
+                    }).catch((err) => {
+                        console.log(err)
+                    })
+                },
+
+
+                addCourse: function() {
+
+                    if (!this.topic) {
+
+                        document.getElementById("demo").innerHTML = "Missing information";
+                        return;
+                    }
+
+                    var string = this.topic
+                    var exp = /(\w(=?@)\w+\.{1}[a-zA-Z]{2,})/i
+                    var test = exp.test(string);
+                    if (test === false) {
+                        document.getElementById("demo").innerHTML = "Re-enter email";
+                        return;
+                    }
+
+
+
+                    //  users = JSON.parse(localStorage.getItem('users'));
+
+
+
+                    fetch(API + '/logg/' + 'upload', {
+                        headers: {
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        method: 'post',
+                        body: JSON.stringify({
+                            topic: this.topic,
+                            location: this.location,
+                            name: this.name,
+
+
+
+                        })
+
+
+                    }).then((res) => {
+
+
+                        if (res.status === 200) {
+
+                            document.getElementById("err").innerHTML = "success";
+
+ window.location.reload()
+
+                        }
+                        if (res.status === 404) {
+                            document.getElementById("err").innerHTML = "err";
+
+                        } else {
+
+
+
+
+                            return;
+
+                        }
+
+                    }).catch((err) => {
+                        console.log(err)
+                    })
+                },
+
+                deletea: function() {
+                    //fetching all courses from database on page load
+
+
+
+                    fetch(API + '/delete/' + 'delete', {
+                            method: 'GET',
+
+                            headers: {
+                                "Content-Type": "application/json; charset=utf-8"
+                            },
+
+                        }).then(res => res.json())
+                        .then(jsonData => {
+                        
+
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                        })
+
+
+                },
+
+
+
+
+                catch (err) {
+                    document.getElementById("err").innerHTML = err.message;
+                }
+            },
+
+
+            created() {
+                //fetching all courses from database on page load
+
+
+                fetch(API + '/qr/' + 'currentlogged', {
+                        method: 'GET',
+
+                        headers: {
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                    }).then(res => res.json())
+                    .then(jsonData => {
+                        jsonData.forEach(element => {
+                            let newItem = {
+                                id: element._id,
+                                topic: element.topic,
+                                location: element.location,
+                                name: element.name
+
+
+
+                            };
+
+                            if (this.location) {
+
+                            }
+
+                            if (typeof this.name != "undefined") {
+                                this.logged = true;
+
+                            }
+                            if (typeof this.location != "undefined") {
+                                this.show = true;
+
+                            }
+
+
+
+                            this.dbTable.push(newItem);
+                            this.valueQr = newItem.name;
+
+
+                        });
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    })
+            },
+
+
+
+
+        });
+    </script>
+
+
+</body></html>

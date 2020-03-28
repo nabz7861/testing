@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+    
+    
+    <style>
+    
+    table {
+    counter-reset: rowNumber;
+}
+
+table tr {
+    counter-increment: rowNumber;
+}
+
+table tr td:first-child::before {
+    content: counter(rowNumber);
+    min-width: 1em;
+    margin-right: 0.5em;
+}
+    
+    </style>
+
+<body><script type="text/javascript" ></script>
+<script src="https://unpkg.com/vue"></script>    
+      <link rel="stylesheet" type="text/css" href="cc1css.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+<!--    <script> src="/app.js" </script>-->
+    
+  
+    <div id="searchFilter">
+    
+    <p id="result">
+   
+ <p id="demo">
+  
+
+<!--<h2>Filter</h2>-->
+<!-- filter -->
+<!--
+<select multiple v-model='userLocations'>
+    <option v-for='location in getLocations'>
+    {{location}}
+    </option>
+</select>
+-->
+<h2>Queue</h2>
+        
+        
+        <table id="myTable">
+  <tr class="header">
+    <th >Po.</th>
+    <th >Patient</th>
+ 
+      
+  </tr>
+        </table>
+<table id="myTable">
+<!--
+  <tr class="header">
+    <th >Topic</th>
+    <th >Location</th>
+    <th >Price</th>
+    <th >Rating</th>
+      
+  </tr>
+-->
+  <tr v-for='course in courses' class='course'>
+       <td></td>
+    <td>patient</td>
+<!--        <td>{{course.name}}</td>-->
+    <td></td>
+ 
+  </tr>
+</table>
+<br/>
+     
+     
+     
+     
+     
+     
+<br><br>
+    <br><br>
+<h2> Your options</h2>
+        
+        
+        <table id="myTable">
+  <tr class="header">
+
+ 
+ 
+      
+  </tr>
+        </table>
+<table id="myTable">
+
+  <tr v-for='course in results' class='course'>
+       <td></td>
+    <td>{{course.name}}</td>
+    <td></td>
+<td><button v-on:click='deleteItem(course.id)' class="button1">Remove</button></td>   
+  </tr>
+</table>
+<br/>
+<br/>
+    </div>
+    
+    
+
+     
+
+<script>
+    
+    
+//const API = "http://localhost:3000"; 
+const API = "https://myappnabz.ngrok.io"; 
+
+
+  
+var searchApp = new Vue({
+el: '#searchFilter',
+
+data: {
+checkto: true,
+term: '',
+bucket:[],
+        topic: "",
+                location: "",
+     listOfItems: ["Student", "Provider"],
+                hideElement: false,
+                seen: false,
+                selectedItem: "",
+dbTable:[],
+    page:'',
+stevetable:[],
+providerTable:[],
+userLocations: [],
+newdbcollection:'', // //not using delete use other
+dbcollection:'',
+//test start
+    Providerreview:'',
+               bucket: [],
+price:'',
+ratingg:'',
+provider:'',  
+//test end
+updatedTopic:'',
+updatedLocation:'',
+updatedPrice:'',
+updatedRating:'',
+itemID:'',
+locations: this.location,
+topic: this.topic,
+    courses3: [] ,  
+courses: []   
+},
+
+ methods: {
+
+            //not using
+            isLocationSelected(location) {
+                return this.userLocations.includes(location);
+            },
+            //using
+            filterByLocation(location) {
+                this.userLocations.push(location);
+            },
+
+            sortAscend() {
+                console.log("sortAscend pressed.");
+            },
+            sortDescend() {
+                console.log("sortDescend pressed.");
+            },
+            showcourse() {
+                this.courses = [];
+                this.fetchCourses();
+            },
+       deleteItem: function(id) {
+    fetch(API+'/slot/'+'confirmed/'+ id, {
+  headers: {  "Content-Type": "application/json; charset=utf-8" },
+  method: 'delete',
+  }).then((res)=>{
+    window.location.reload()
+  }).catch((err)=>{
+      console.log(err)
+  })
+},
+
+            reset() {
+                this.userLocations = [];
+                this.term = "";
+            },
+            high2low() {
+                this.courses = this.courses.sort(
+                    (prev, curr) => curr.price - prev.price
+                );
+                this.userLocations = [];
+            },
+            low2high() {
+                this.courses = this.courses.sort(
+                    (prev, curr) => prev.price - curr.price
+                );
+                this.userLocations = [];
+            },
+              fetchfromlogged() {
+                fetch(API + "/qr/" + "currentlogged")
+                    .then(res => res.json())
+                    .then(jsonData => {
+                        jsonData.forEach(element => {
+                            const catched = {
+                                id: element._id,
+                          
+                                name: element.name
+                            };
+
+                            this.courses3.push(catched);
+                            // this.dbTable.push(newItem);
+                            // document.getElementById('result').innerHTML = newItem;
+                                        document.getElementById("demo").innerHTML = "You are logged in as" + " " + catched.name;
+                            
+                            
+    //using value from currently logged user to filter.
+this.userLocations = catched.name;
+                       
+                        
+                        
+                        });
+                    
+                    
+                    
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+            },
+            fetchCourses() {
+                fetch(API + "/slot/" + "confirmed")
+                    .then(res => res.json())
+                    .then(jsonData => {
+                        jsonData.forEach(element => {
+                            const newItem = {
+                                id: element._id,
+                          
+                                name: element.name
+                            };
+
+                            this.courses.push(newItem);
+                            // this.dbTable.push(newItem);
+                            // document.getElementById('result').innerHTML = newItem;
+//                                        document.getElementById("demo").innerHTML = "You are logged in as" + " " + newItem.name;
+                            
+//                             this.userLocations = newItem.name;
+                        });
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+            },
+
+            
+
+        },
+        created() {
+            //fetching all courses from database on page load
+            this.fetchCourses();
+            this.fetchfromlogged();
+            
+ 
+        },
+
+        computed: {
+            getLocations() {
+               
+               
+                // update option list
+//                return [...new Set(this.courses.map(x => x.location))];
+            },
+            results() {
+                return this.courses.filter(course => {
+                    // search condition
+                    var searchCourse = course.name
+                        .toLowerCase()
+                        .includes(this.term.toLowerCase());
+                    // filter condition
+                    var filterCourse =
+//                        this.userLocations.length == 0 ||
+                        this.userLocations.includes(course.name);
+                    // combine the result
+                    return searchCourse && filterCourse;
+                });
+            }
+        }
+    
+});
+
+</script>
+
+
+</body>
+</html>
