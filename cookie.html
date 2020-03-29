@@ -7,7 +7,7 @@
 function setCookie(cname,cvalue,exdays) {
   var d = new Date();
   d.setTime(d.getTime() + (exdays*24*60*60*1000));
-  var expires = "expires=" + d.toGMTString();
+  var expires = "expires=Fri, 31 Dec 2021 23:59:59 " + d.toGMTString();
   document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
 
@@ -43,8 +43,6 @@ function checkCookie() {
 </head>
 
 <body onload="checkCookie()">
-                  
-<a href='cookies2.html' v-bind:class="{active: page==='home'}">log</a>
     <p id="demo">
 
     </body>
