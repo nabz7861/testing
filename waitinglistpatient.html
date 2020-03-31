@@ -28,7 +28,8 @@ table tr td:first-child::before {
 
 
     <div id="searchFilter">
-
+        <button v-on:click='deletea'>logout</button>
+<br><br>
     <p id="result">
 <a href='qrscanner.html' v-bind:class="{active: page==='home'}">QR</a>
  <p id="demo">
@@ -246,7 +247,7 @@ currentLoggedUser: null
                                 name: element.name
                             };
 
-                            this.currentLoggedUser = catched;
+//                            this.currentLoggedUser = catched;
 
                             this.courses3.push(catched);
                             // this.dbTable.push(newItem);
@@ -291,12 +292,38 @@ this.result = jsonData.length*20-20;
                         console.log(err);
                     });
             },
+      deletea: function() {
+                    //fetching all courses from database on page load
+   
+localStorage.removeItem('name');
+  localStorage.removeItem('email');
+
+
+                    fetch(API + '/delete/' + 'delete', {
+                            method: 'GET',
+
+                            headers: {
+                                "Content-Type": "application/json; charset=utf-8"
+                            },
+
+                        }).then(res => res.json())
+                        .then(jsonData => {
+                     
+
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                        })
+
+
+                },
 
 
 
         },
         created() {
             //fetching all courses from database on page load
+         this.currentLoggedUser = localStorage;
             this.fetchCourses();
             this.fetchfromlogged();
 
@@ -310,6 +337,8 @@ this.result = jsonData.length*20-20;
                 // update option list
 //                return [...new Set(this.courses.map(x => x.location))];
             },
+            
+            
             results() {
                 return this.courses.filter(course => {
                     // search condition
@@ -319,7 +348,7 @@ this.result = jsonData.length*20-20;
                     // filter condition
                     var filterCourse =
 //                 course.name = database filtered based on userlocation
-                        this.userLocations.includes(course.name);
+                        localStorage.name.includes(course.name);
                     // combine the result
                     return filterCourse;
                 });

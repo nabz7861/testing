@@ -23,6 +23,7 @@
 </head>
 
 <body>
+    <button v-on:click='deletea'>logout</button>
 	
     
     <div id="app">
@@ -35,11 +36,11 @@
           
 
        
-<a href='patientlogin.html' v-bind:class="{active: page==='home'}">log</a>
+<a href='patientlogin.html'>log</a>
 
-<a href='workngQRREG.html' v-bind:class="{active: page==='userpage'}">reg</a>
+<a href='workngQRREG.html' >reg</a>
 
-<a href='waitinglistpractice.html' v-bind:class="{active: page==='userpage'}">Review</a>
+<a href='waitinglistpractice.html' >Review</a>
 
 
 
@@ -134,38 +135,7 @@ new Vue({
       
           addCourse: function() { 
               
-                            fetch(API + '/qr/' + 'currentlogged', {
-                        method: 'GET',
-
-                        headers: {
-                            "Content-Type": "application/json; charset=utf-8"
-                        },
-                    }).then(res => res.json())
-                    .then(jsonData => {
-                        jsonData.forEach(element => {
-                            let newItem = {
-                                id: element._id,
-                                topic: element.topic,
-                                name: element.name
-                                
-
-
-
-                            };
-
-                            this.dbTable.push(newItem);
-                            
-console.log(newItem);
-var myJSON = JSON.stringify(newItem);           
-//        var txt = newItem;
-//var obj = JSON.stringify(txt);
-                            
-document.getElementById("demo").value = newItem.topic;
-                            
-                                       
-
-                            
-                            
+                              
                           
             fetch(API + '/booked/' + 'datetime', {
                     headers: {"Content-Type": "application/json; charset=utf-8"},
@@ -173,8 +143,8 @@ document.getElementById("demo").value = newItem.topic;
                     body: JSON.stringify({
                         date: this.time,
                         time: this.date,
-                        topic: newItem.topic,
-                        name: newItem.name,
+                        topic: localStorage.email,
+                        name:  localStorage.name,
                         description: this.description,
                       
                     })
@@ -190,10 +160,12 @@ document.getElementById("demo").value = newItem.topic;
                         // email client ftpnabz@hotmail.com pass 
     Email.send({
     SecureToken : "6919eb50-0655-4f1b-b3dd-feaa99a6aeff",
+        //chnage
+//          To : newItem.name,  
     To : 'ftpnabz@hotmail.com',
     From : "ftpnabz@hotmail.com",
     Subject : "APPOINTMENT CONFIRMED",
-    Body : "Hi " + newItem.name + " your Appointment has been confirmed at our medical centre  for " +  this.date + " at " + this.time
+    Body : "Hi " + localStorage.name + " your Appointment has been confirmed at our medical centre  for " +  this.date + " at " + this.time
     
         
         
@@ -218,7 +190,27 @@ document.getElementById("demo").value = newItem.topic;
                 })
 
                             
+ fetch(API + '/qr/' + 'currentlogged', {
+                        method: 'GET',
 
+                        headers: {
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                    }).then(res => res.json())
+                    .then(jsonData => {
+                        jsonData.forEach(element => {
+                            let newItem = {
+                                id: element._id,
+                                topic: element.topic,
+                                name: element.name
+                                
+
+
+
+                            };
+
+                            this.dbTable.push(newItem);
+                            
 
                         });
                     })
@@ -232,6 +224,32 @@ document.getElementById("demo").value = newItem.topic;
             
 },
       
+       deletea: function() {
+                    //fetching all courses from database on page load
+   
+localStorage.removeItem('name');
+  localStorage.removeItem('email');
+
+
+                    fetch(API + '/delete/' + 'delete', {
+                            method: 'GET',
+
+                            headers: {
+                                "Content-Type": "application/json; charset=utf-8"
+                            },
+
+                        }).then(res => res.json())
+                        .then(jsonData => {
+                     
+
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                        })
+
+
+                },
+      
       
       
     
@@ -239,7 +257,8 @@ document.getElementById("demo").value = newItem.topic;
 //    
     created() {
                 //fetching all courses from database on page load
-
+               var localname = localStorage.getItem("name");             
+document.getElementById("demo").innerHTML = "You are logged in as" + " " + localname ;
 
 
                 fetch(API + '/qr/' + 'currentlogged', {
@@ -269,8 +288,7 @@ var myJSON = JSON.stringify(newItem);
                             
 //document.getElementById("myText").value = newItem.topic;
 
-                            
-document.getElementById("demo").innerHTML = "You are logged in as" + " " + newItem.name ;
+   
 
                         });
                     })

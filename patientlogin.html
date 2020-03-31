@@ -15,16 +15,12 @@
     <div id="searchFilter">
 
         <center>
-            <table id="myTable">
-                <tr class="header">
-
-
-                </tr>
-                <tr v-if="logged" v-for='course in dbTable' class='course'>
-                    <td> you are logged in as {{course.name}}</td>
-
-                </tr>
-            </table>
+            
+             <template v-if="logged">
+       <h2> You are logged in as {{localname}}</h2>
+    </template>
+          
+           <br>
 
         </center>
         <div>
@@ -44,7 +40,7 @@
 
 
                 <div id="navigation">
-                    <toplinks v-bind:page=page></toplinks>
+<!--                    <toplinks v-bind:page=page></toplinks>-->
                 </div>
             </center>
             <br> <br> <br>
@@ -151,6 +147,7 @@
                 page: '',
                 name: '',
                 logged: '',
+                localname: '',
                 selectOne: '',
                 currentlog: '',
                 show: '',
@@ -164,6 +161,13 @@
                 location: '',
 
             },
+              mounted() {
+    if (localStorage.name) {
+      this.localname = localStorage.name;
+        
+    }
+
+  },
 
             methods: {
                 reset: function() {
@@ -230,6 +234,9 @@
 
 
                         if (res.status === 200) {
+                            
+localStorage.setItem("name", this.name);
+localStorage.setItem("email", this.topic);       
 
                             document.getElementById("err").innerHTML = "success";
 
@@ -255,7 +262,9 @@
 
                 deletea: function() {
                     //fetching all courses from database on page load
-
+   
+localStorage.removeItem('name');
+  localStorage.removeItem('email');
 
 
                     fetch(API + '/delete/' + 'delete', {
@@ -267,7 +276,7 @@
 
                         }).then(res => res.json())
                         .then(jsonData => {
-                        
+                     
 
                         })
                         .catch((err) => {
@@ -288,7 +297,27 @@
 
             created() {
                 //fetching all courses from database on page load
+            //current logged user      
+ var localname = localStorage.getItem("name");
 
+                
+                 if (localname) {
+     this.logged = true;
+    this.show = true;
+        
+    }
+                                
+//                
+//                    if (typeof localname != "undefined") {
+//                                this.logged = true;
+//
+//                            }
+//                            if (typeof localname != null) {
+//                                this.show = true;
+//
+//                            }
+                
+                     this.valueQr = localname;
 
                 fetch(API + '/qr/' + 'currentlogged', {
                         method: 'GET',
@@ -308,24 +337,15 @@
 
 
                             };
-
-                            if (this.location) {
-
-                            }
-
-                            if (typeof this.name != "undefined") {
-                                this.logged = true;
-
-                            }
-                            if (typeof this.location != "undefined") {
-                                this.show = true;
-
-                            }
+                            
+  
+ 
+                        
 
 
 
                             this.dbTable.push(newItem);
-                            this.valueQr = newItem.name;
+                       
 
 
                         });
