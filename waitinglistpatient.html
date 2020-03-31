@@ -19,32 +19,52 @@ table tr td:first-child::before {
 }
 
     </style>
+    
+    <script type="text/javascript" ></script>
+     <link rel="stylesheet" type="text/css" href="navcss.css">
+<script src="https://unpkg.com/vue"></script>
+      <link rel="stylesheet" type="text/css" href="cc1css.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <body>
     
     
-    <script type="text/javascript" ></script>
-<script src="https://unpkg.com/vue"></script>
-      <link rel="stylesheet" type="text/css" href="cc1css.css">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="manifest" href="website.webmanifest">
+    
 <!--    <script> src="/app.js" </script>-->
 
 
     <div id="searchFilter">
-        <center>
         
-          <a href='patientlogin.html'>login</a>
-            <a href='loggedbooking.html'>booking</a>
-            <a href='waitinglistpatient.html'>waitinglist</a>
-            <a href='workngQRREG.html'>reg</a>
-            <a href='waitinglistpractice1.html'>pwait</a>
-            <a href='qrscanner.html'>scan</a>
-        <br><br>
-        <button v-on:click='deletea'>logout</button>
-<br><br>
-    <p id="result">
+  <div id="allTheNav">
+    <nav id="navigator" class="navbar" :class="{navbaropen: opened}">
+      <span class="open-slide">
+        <a href="#" @click="opened = !opened">
+          <div>
+            <div class="bar" :class="{topopen: opened}"></div>
+            <div class="bar" :class="{midopen: opened}"></div>
+            <div class="bar" :class="{botopen: opened}"></div>
+          </div>
+        </a>
+      </span>
+      
+    </nav>
+  <div id="side-menu" class="side-nav" :class="{sidenavopen: opened}">
+    <a href="loggedbooking.html">Login</a>
+    <a href="waitinglistpatient.html">Queue</a>
+    <a href="workngQRREG.html">Register</a>
+    <a href="waitinglistpractice1.html">pQUE</a>
+      <a href="qrscanner.html">scanner</a>
+      
+    <link href="https://fonts.googleapis.com/css?family=Sacramento&display=swap" rel="stylesheet">
+      
+  </div>
 
+  </div>
+        
+        <center>
+ <h1>Queue</h1>   
+<br><br>
+<p id="result">
  <p id="demo">
 
 
@@ -57,11 +77,11 @@ table tr td:first-child::before {
     </option>
 </select>
 -->
+     
 
         <br>
 
 <h2>Estimated wait time from point of entry is {{result}} minutes</h2>
-            <br>
 
         <table id="myTable">
   <tr class="header">
@@ -138,10 +158,10 @@ table tr td:first-child::before {
         
         
         
+        </center>
         
         
         
-      </center>  
     </div>
 
 
@@ -163,6 +183,7 @@ data: {
 checkto: true,
 term: '',
 bucket:[],
+    opened: false,
         topic: "",
                 location: "",
      listOfItems: ["Student", "Provider"],

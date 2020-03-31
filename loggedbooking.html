@@ -9,6 +9,9 @@
         <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>   
      <link rel="stylesheet" type="text/css" href="cc1css.css">
         <link rel="manifest" href="website.webmanifest">
+        <link rel="stylesheet" type="text/css" href="navcss.css">
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+       <link href="https://fonts.googleapis.com/css?family=Sacramento&display=swap" rel="stylesheet">
     
     <style>
     
@@ -25,35 +28,52 @@
 
 <body>
     
-<center>
-      <a href='patientlogin.html'>login</a>
-            <a href='loggedbooking.html'>booking</a>
-            <a href='waitinglistpatient.html'>waitinglist</a>
-            <a href='workngQRREG.html'>reg</a>
-            <a href='waitinglistpractice1.html'>pwait</a>
-            <a href='qrscanner.html'>scan</a>
-    <br><br>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
     
-       <h4>
-                <p id="demo">
-            </h4>
-    <br> 
-    <button v-on:click='deletea'>logout</button>
-	
-      <br><br>
 
-    <div id="app">
+ 
+
+ <div id="app">
+
+     
+       <div id="allTheNav">
+    <nav id="navigator" class="navbar" :class="{navbaropen: opened}">
+      <span class="open-slide">
+        <a href="#" @click="opened = !opened">
+          <div>
+            <div class="bar" :class="{topopen: opened}"></div>
+            <div class="bar" :class="{midopen: opened}"></div>
+            <div class="bar" :class="{botopen: opened}"></div>
+          </div>
+        </a>
+      </span>
       
-            <h2>
-                <p id="err">
-            </h2>
-          
+    </nav>
+  <div id="side-menu" class="side-nav" :class="{sidenavopen: opened}">
+    <a href="loggedbooking.html">Login</a>
+    <a href="waitinglistpatient.html">Queue</a>
+    <a href="workngQRREG.html">Register</a>
+    <a href="waitinglistpractice1.html">pQUE</a>
+      <a href="qrscanner.html">scanner</a>
+      
+  </div>
+  
+   
+      
+      
+      
+      
+  </div>
+     
 
-             
-
-
-
+         <h2><p id="err"> </h2>
+     <center>
+         <h1>Booking</h1>
+<h4><p id="demo"></h4>
+       </center>
+      <br><br>
+        
+<center>
+    <button v-on:click='deletea'>logout</button>
   <v-app>
     <v-content>
       <v-container>
@@ -124,6 +144,7 @@ new Vue({
     time: null,
     dbTable: [],
        description: '',
+          opened: false,
         name: '',
       topic: '',
     allowedTimes: ['8:30 am','9:00am','10:30am','1:30pm','3:30 pm']

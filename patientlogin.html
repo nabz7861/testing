@@ -7,23 +7,43 @@
     <link rel="stylesheet" type="text/css" href="cc1css.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="manifest" href="website.webmanifest">
+        <link rel="stylesheet" type="text/css" href="navcss.css">
 
     <script src="https://xkeshi.github.io/vue-qrcode/js/vue-qrcode.js"></script>
     <link rel="icon" type="image/x-icon" href="" />
 
 
     <div id="searchFilter">
+        
+          <div id="allTheNav">
+    <nav id="navigator" class="navbar" :class="{navbaropen: opened}">
+      <span class="open-slide">
+        <a href="#" @click="opened = !opened">
+          <div>
+            <div class="bar" :class="{topopen: opened}"></div>
+            <div class="bar" :class="{midopen: opened}"></div>
+            <div class="bar" :class="{botopen: opened}"></div>
+          </div>
+        </a>
+      </span>
+      
+    </nav>
+  <div id="side-menu" class="side-nav" :class="{sidenavopen: opened}">
+    <a href="loggedbooking.html">Login</a>
+    <a href="waitinglistpatient.html">Queue</a>
+    <a href="workngQRREG.html">Register</a>
+    <a href="waitinglistpractice1.html">pQUE</a>
+      <a href="qrscanner.html">scanner</a>
+      
+  </div>
+ 
+  </div>
 
         <center>
-            <a href='patientlogin.html'>login</a>
-            <a href='loggedbooking.html'>booking</a>
-            <a href='waitinglistpatient.html'>waitinglist</a>
-            <a href='workngQRREG.html'>reg</a>
-            <a href='waitinglistpractice1.html'>pwait</a>
-            <a href='qrscanner.html'>scan</a>
+      <h1>Login </h1>
             
              <template v-if="logged">
-       <h2> You are logged in as {{localname}}</h2>
+       <h4> You are logged in as {{localname}}</h4>
     </template>
           
            <br>
@@ -35,7 +55,7 @@
                 <button v-on:click='deletea'>logout</button>
 
 
-                <h1>Login </h1>
+              
 
 
                 <link href="https://fonts.googleapis.com/css?family=Sacramento&display=swap" rel="stylesheet">
@@ -157,6 +177,7 @@
                 logged: '',
                 localname: '',
                 selectOne: '',
+                    opened: false,
                 currentlog: '',
                 show: '',
                 trust: '',
