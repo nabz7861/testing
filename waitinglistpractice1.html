@@ -24,11 +24,12 @@ table tr td:first-child::before {
         <meta name="viewport" content="width=device-width, initial-scale=1">
 <!--    <script> src="/app.js" </script>-->
     
-             <div>
-<a href='qrscanner.html' v-bind:class="{active: page==='home'}">QR</a>
-
-
-</div>
+  <a href='patientlogin.html'>login</a>
+            <a href='loggedbooking.html'>booking</a>
+            <a href='waitinglistpatient.html'>waitinglist</a>
+            <a href='workngQRREG.html'>reg</a>
+            <a href='waitinglistpractice1.html'>pwait</a>
+            <a href='qrscanner.html'>scan</a>
 
     
     <p id="result">
@@ -86,25 +87,7 @@ table tr td:first-child::before {
 
 const API = "https://myappnabz.ngrok.io"; 
 
-var courses = [
-    
-{ 'topic': 'english', 'location': 'england', 'price': 100, 'rating': 3 },
-    { 'topic': 'maths', 'location': 'england', 'price': 100, 'rating': 3 },
-    { 'topic': 'english', 'location': 'france', 'price': 2, 'rating': 1 },
-        { 'topic': 'it', 'location': 'ireland', 'price': 4, 'rating': 5 },
-    { 'topic': 'maths', 'location': 'germany', 'price': 100, 'rating': 3 },
-    { 'topic': 'english', 'location': 'france', 'price': 2, 'rating': 1 },
-        { 'topic': 'it', 'location': 'ireland', 'price': 4, 'rating': 5 },
-    
 
-];
-    
-    
-    
-
-   localStorage.setItem("courses", JSON.stringify(courses));    
-
-var courses = JSON.parse(localStorage.getItem("courses"));
   
 var searchApp = new Vue({
 el: '#searchFilter',

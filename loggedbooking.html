@@ -7,7 +7,7 @@
 </script>
         <script src="https://unpkg.com/vue"></script>    
         <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>   
-    
+     <link rel="stylesheet" type="text/css" href="cc1css.css">
     
     <style>
     
@@ -23,10 +23,18 @@
 </head>
 
 <body>
+      <a href='patientlogin.html'>login</a>
+            <a href='loggedbooking.html'>booking</a>
+            <a href='waitinglistpatient.html'>waitinglist</a>
+            <a href='workngQRREG.html'>reg</a>
+            <a href='waitinglistpractice1.html'>pwait</a>
+            <a href='qrscanner.html'>scan</a>
+    <br><br>
         <meta name="viewport" content="width=device-width, initial-scale=1">
     <button v-on:click='deletea'>logout</button>
 	
-    
+     
+
     <div id="app">
          <h2>
                 <p id="demo">
@@ -36,13 +44,7 @@
             </h2>
           
 
-       
-<a href='patientlogin.html'>log</a>
-
-<a href='workngQRREG.html' >reg</a>
-
-<a href='waitinglistpractice.html' >Review</a>
-
+             
 
 
 
@@ -50,7 +52,7 @@
   <v-app>
     <v-content>
       <v-container>
-        <div class="text-center title"><h1>Select a Date & Time</h1></div>
+        <div class="text-center title"><h2>Select a Date & Time</h2></div>
         <v-row justify="center">
             <v-date-picker
               v-model="date"
@@ -81,7 +83,7 @@
         
 <!--        input field-->
          
-        <h1>State your issue</h1>
+        <h3>State your issue</h3>
                 <v-text-field
                    
                     textarea

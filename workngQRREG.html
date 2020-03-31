@@ -11,21 +11,24 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="">
 	<link rel="icon" type="image/x-icon" href=""/>
+     <link rel="stylesheet" type="text/css" href="cc1css.css">
 </head>
 
 <body>
+      <a href='patientlogin.html'>login</a>
+            <a href='loggedbooking.html'>booking</a>
+            <a href='waitinglistpatient.html'>waitinglist</a>
+            <a href='workngQRREG.html'>reg</a>
+            <a href='waitinglistpractice1.html'>pwait</a>
+            <a href='qrscanner.html'>scan</a>
 <div id="searchFilter">
     
         
         
-   <h1>Registration </h1>
+   
        
        
-<a href='patientlogin.html' v-bind:class="{active: page==='home'}">log</a>
 
-<a href='loggedbooking.html' v-bind:class="{active: page==='userpage'}">cal</a>
-
-<a href='waitinglistpractice.html' v-bind:class="{active: page==='userpage'}">waiting </a>
 
 
 
@@ -52,6 +55,8 @@
 </div>
 
         <center>
+            <h1>Registration </h1>
+            <br>
             
              <input type="text" id="myInput" placeholder="Name" v-model='name'>
             <br><br>
