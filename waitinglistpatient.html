@@ -31,6 +31,7 @@ table tr td:first-child::before {
 
 
     <div id="searchFilter">
+        <center>
         
           <a href='patientlogin.html'>login</a>
             <a href='loggedbooking.html'>booking</a>
@@ -42,7 +43,7 @@ table tr td:first-child::before {
         <button v-on:click='deletea'>logout</button>
 <br><br>
     <p id="result">
-<a href='qrscanner.html' v-bind:class="{active: page==='home'}">QR</a>
+
  <p id="demo">
 
 
@@ -55,10 +56,11 @@ table tr td:first-child::before {
     </option>
 </select>
 -->
-<h2>Queue</h2>
+
         <br>
 
 <h2>Estimated wait time from point of entry is {{result}} minutes</h2>
+            <br>
 
         <table id="myTable">
   <tr class="header">
@@ -138,7 +140,7 @@ table tr td:first-child::before {
         
         
         
-        
+      </center>  
     </div>
 
 

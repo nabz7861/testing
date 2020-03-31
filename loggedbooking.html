@@ -23,6 +23,8 @@
 </head>
 
 <body>
+    
+<center>
       <a href='patientlogin.html'>login</a>
             <a href='loggedbooking.html'>booking</a>
             <a href='waitinglistpatient.html'>waitinglist</a>
@@ -31,14 +33,17 @@
             <a href='qrscanner.html'>scan</a>
     <br><br>
         <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+       <h4>
+                <p id="demo">
+            </h4>
+    <br> 
     <button v-on:click='deletea'>logout</button>
 	
-     
+      <br><br>
 
     <div id="app">
-         <h2>
-                <p id="demo">
-            </h2>
+      
             <h2>
                 <p id="err">
             </h2>
@@ -48,12 +53,12 @@
 
 
 
-
   <v-app>
     <v-content>
       <v-container>
-        <div class="text-center title"><h2>Select a Date & Time</h2></div>
+        <div class="text-center title"><h3>Select a Date & Time</h3></div>
         <v-row justify="center">
+            <br>
             <v-date-picker
               v-model="date"
               :allowed-dates="allowedDates"
@@ -100,6 +105,7 @@
         
         
         <button v-on:click='addCourse()' class="button1">Book</button>
+    </center>
 </div>
 	
     
