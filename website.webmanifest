@@ -1,12 +1,8 @@
 {
-  "name": "Finalyearproject",
-  "short_name": "FYP",
-  "theme_color": "#659ecb",
-  "background_color": "#74baf1",
-  "display": "fullscreen",
-  "orientation": "portrait",
-  "start_url": "/workngQRREG",
-  "icons": [
+    "name": "Finalyearproject",
+    "short_name": "FYP",
+    "description": "3",
+    "icons": [
     {
       "src": "images/icons/icon-72x72.png",
       "sizes": "72x72",
@@ -48,5 +44,8 @@
       "type": "image/png"
     }
   ],
-
+    "start_url": "/patientlogin.html",
+    "display": "fullscreen",
+    "theme_color": "#B12A34",
+    "background_color": "#B12A34"
 }
