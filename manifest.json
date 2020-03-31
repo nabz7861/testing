@@ -1,8 +1,12 @@
 {
-    "name": "Final year project",
-    "short_name": "FYP",
-    "description": "nab",
-    "icons": [
+  "name": "Finalyearproject",
+  "short_name": "FYP",
+  "theme_color": "#659ecb",
+  "background_color": "#74baf1",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "start_url": "/workngQRREG",
+  "icons": [
     {
       "src": "images/icons/icon-72x72.png",
       "sizes": "72x72",
@@ -44,8 +48,5 @@
       "type": "image/png"
     }
   ],
-    "start_url": "/patientlogin.html",
-    "display": "fullscreen",
-    "theme_color": "#90cbe8",
-    "background_color": "#ebf5f5"
+  "splash_pages": null
 }
