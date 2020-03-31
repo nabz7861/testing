@@ -390,6 +390,10 @@ localStorage.removeItem('name');
         },
         created() {
             //fetching all courses from database on page load
+             if (typeof localStorage.name === 'undefined') {
+                 
+   location.replace("patientlogin.html")
+}
          this.currentLoggedUser = localStorage;
             this.fetchCourses();
             this.fetchfromlogged();
@@ -404,7 +408,7 @@ localStorage.removeItem('name');
                 // update option list
 //                return [...new Set(this.courses.map(x => x.location))];
             },
-            
+        
             
             results() {
                 return this.courses.filter(course => {
@@ -415,6 +419,7 @@ localStorage.removeItem('name');
                     // filter condition
                     var filterCourse =
 //                 course.name = database filtered based on userlocation
+                       
                         localStorage.name.includes(course.name);
                     // combine the result
                     return filterCourse;
